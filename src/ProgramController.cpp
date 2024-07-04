@@ -1,4 +1,5 @@
 #include "../include/ProgramController.h"
+#include <SDL2/SDL_events.h>
 #include <SDL2/SDL_video.h>
 #include <iostream>
 
@@ -6,42 +7,6 @@ ProgramController::ProgramController ()
     : _state (ProgramState::RUN), _window_title ("DOOM"), _window (nullptr),
       _window_width (640), _window_height (400)
 {
-}
-
-void
-ProgramController::main_loop ()
-{
-  // NOTE: Placeholder graphic
-  SDL_Surface *window_surface = SDL_GetWindowSurface (_window);
-  if (!window_surface)
-    {
-      std::cout << "Failed to create surface" << '\n';
-    }
-  SDL_Surface *image = SDL_LoadBMP ("assets/doom.bmp");
-  if (!image)
-    {
-      std::cout << "Failed to load image" << '\n';
-      std::cout << "SDL2 Error: " << SDL_GetError () << '\n';
-    }
-
-  // Keep window open until closed
-  while (_state == ProgramState::RUN)
-    {
-      // Poll for events and update on event
-      SDL_Event e;
-      while (SDL_PollEvent (&e) > 0)
-        {
-          switch (e.type)
-            {
-            case SDL_QUIT:
-              _state = ProgramState::HALT;
-              break;
-            }
-        }
-      // Update window
-      SDL_BlitSurface (image, NULL, window_surface, NULL);
-      SDL_UpdateWindowSurface (_window);
-    }
 }
 
 void
@@ -62,6 +27,48 @@ ProgramController::init_systems ()
       std::cout << "Failed to create window" << '\n';
     }
 };
+
+void
+ProgramController::process_input ()
+{
+  SDL_Event e;
+  while (SDL_PollEvent (&e) > 0)
+    {
+      switch (e.type)
+        {
+        case SDL_QUIT:
+          _state = ProgramState::HALT;
+          break;
+        }
+    }
+}
+
+void
+ProgramController::main_loop ()
+{
+  // NOTE: Placeholder graphic for window surface
+  SDL_Surface *window_surface = SDL_GetWindowSurface (_window);
+  if (!window_surface)
+    {
+      std::cout << "Failed to create surface" << '\n';
+    }
+  SDL_Surface *image = SDL_LoadBMP ("assets/doom.bmp");
+  if (!image)
+    {
+      std::cout << "Failed to load image" << '\n';
+      std::cout << "SDL2 Error: " << SDL_GetError () << '\n';
+    }
+
+  // Keep window open until closed
+  while (_state == ProgramState::RUN)
+    {
+      // Poll for events and update on event
+      process_input ();
+      // Update window
+      SDL_BlitSurface (image, NULL, window_surface, NULL);
+      SDL_UpdateWindowSurface (_window);
+    }
+}
 
 void
 ProgramController::run ()

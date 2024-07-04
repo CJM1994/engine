@@ -24,6 +24,7 @@ public:
 private:
   // Methods
   void init_systems ();
+  void process_input ();
   void main_loop ();
 
   // Vars
