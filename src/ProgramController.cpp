@@ -34,7 +34,7 @@ ProgramController::initSystems ()
       std::cout << "Failed to create surface" << '\n';
     }
 
-  SDL_Surface *image = SDL_LoadBMP ("build/doom.bmp");
+  SDL_Surface *image = SDL_LoadBMP ("assets/doom.bmp");
 
   if (!image)
     {
