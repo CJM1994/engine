@@ -23,7 +23,8 @@ public:
 
 private:
   // Methods
-  void initSystems ();
+  void init_systems ();
+  void main_loop ();
 
   // Vars
   ProgramState _state;

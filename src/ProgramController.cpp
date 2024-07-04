@@ -5,37 +5,19 @@
 ProgramController::ProgramController ()
     : _state (ProgramState::RUN), _window_title ("DOOM"), _window (nullptr),
       _window_width (640), _window_height (400)
-
 {
 }
 
 void
-ProgramController::initSystems ()
+ProgramController::main_loop ()
 {
-  // Initialize SDL
-  if (SDL_Init (SDL_INIT_VIDEO) < 0)
-    {
-      std::cout << "Failed to initialize the SDL2 library";
-    }
-  std::cout << "width: " << _window_width << '\n';
-  std::cout << "height: " << _window_height << '\n';
-  _window = SDL_CreateWindow (_window_title, SDL_WINDOWPOS_CENTERED,
-                              SDL_WINDOWPOS_CENTERED, _window_width,
-                              _window_height, 0);
-  if (!_window)
-    {
-      std::cout << "Failed to create window" << '\n';
-    }
-
+  // NOTE: Placeholder graphic
   SDL_Surface *window_surface = SDL_GetWindowSurface (_window);
-
   if (!window_surface)
     {
       std::cout << "Failed to create surface" << '\n';
     }
-
   SDL_Surface *image = SDL_LoadBMP ("assets/doom.bmp");
-
   if (!image)
     {
       std::cout << "Failed to load image" << '\n';
@@ -60,10 +42,30 @@ ProgramController::initSystems ()
       SDL_BlitSurface (image, NULL, window_surface, NULL);
       SDL_UpdateWindowSurface (_window);
     }
+}
+
+void
+ProgramController::init_systems ()
+{
+  // Initialize SDL
+  if (SDL_Init (SDL_INIT_VIDEO) < 0)
+    {
+      std::cout << "Failed to initialize the SDL2 library";
+    }
+  std::cout << "width: " << _window_width << '\n';
+  std::cout << "height: " << _window_height << '\n';
+  _window = SDL_CreateWindow (_window_title, SDL_WINDOWPOS_CENTERED,
+                              SDL_WINDOWPOS_CENTERED, _window_width,
+                              _window_height, 0);
+  if (!_window)
+    {
+      std::cout << "Failed to create window" << '\n';
+    }
 };
 
 void
 ProgramController::run ()
 {
-  ProgramController::initSystems ();
+  ProgramController::init_systems ();
+  ProgramController::main_loop ();
 };
