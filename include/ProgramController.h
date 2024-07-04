@@ -25,6 +25,7 @@ private:
   // Methods
   void init_systems ();
   void process_input ();
+  void fatal_error (std::string);
   void main_loop ();
 
   // Vars

@@ -1,6 +1,8 @@
 #include "../include/ProgramController.h"
+#include <SDL2/SDL_error.h>
 #include <SDL2/SDL_events.h>
 #include <SDL2/SDL_video.h>
+#include <cstdlib>
 #include <iostream>
 
 ProgramController::ProgramController ()
@@ -15,16 +17,14 @@ ProgramController::init_systems ()
   // Initialize SDL
   if (SDL_Init (SDL_INIT_VIDEO) < 0)
     {
-      std::cout << "Failed to initialize the SDL2 library";
+      fatal_error ("Failed to initialize the SDL2 library");
     }
-  std::cout << "width: " << _window_width << '\n';
-  std::cout << "height: " << _window_height << '\n';
   _window = SDL_CreateWindow (_window_title, SDL_WINDOWPOS_CENTERED,
                               SDL_WINDOWPOS_CENTERED, _window_width,
                               _window_height, 0);
-  if (!_window)
+  if (_window == nullptr)
     {
-      std::cout << "Failed to create window" << '\n';
+      fatal_error ("Failed to create window with SDL2");
     }
 };
 
@@ -38,9 +38,27 @@ ProgramController::process_input ()
         {
         case SDL_QUIT:
           _state = ProgramState::HALT;
+        case SDL_KEYDOWN:
+          std::cout << "key pressed: " << e.key.keysym.scancode << '\n';
           break;
         }
     }
+}
+
+void
+ProgramController::fatal_error (std::string error)
+{
+  std::cout << error << '\n';
+  if (SDL_GetError ())
+    {
+      std::cout << "Last SDL2 error: " << SDL_GetError () << '\n';
+    }
+  std::cout << "Fatal error, enter any string to close the application"
+            << '\n';
+  char input;
+  std::cin >> input;
+  SDL_Quit ();
+  exit (EXIT_FAILURE);
 }
 
 void
@@ -50,13 +68,12 @@ ProgramController::main_loop ()
   SDL_Surface *window_surface = SDL_GetWindowSurface (_window);
   if (!window_surface)
     {
-      std::cout << "Failed to create surface" << '\n';
+      fatal_error ("Failed to create surface with SDL2");
     }
   SDL_Surface *image = SDL_LoadBMP ("assets/doom.bmp");
   if (!image)
     {
-      std::cout << "Failed to load image" << '\n';
-      std::cout << "SDL2 Error: " << SDL_GetError () << '\n';
+      fatal_error ("Failed to load image with SDL2");
     }
 
   // Keep window open until closed
