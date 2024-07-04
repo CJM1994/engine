@@ -14,7 +14,7 @@ ProgramController::ProgramController ()
 void
 ProgramController::init_systems ()
 {
-  // Initialize SDL
+  // SDL
   if (SDL_Init (SDL_INIT_VIDEO) < 0)
     {
       fatal_error ("Failed to initialize the SDL2 library");
@@ -25,6 +25,12 @@ ProgramController::init_systems ()
   if (_window == nullptr)
     {
       fatal_error ("Failed to create window with SDL2");
+    }
+  // OpenGL
+  SDL_GLContext const gl_context{ SDL_GL_CreateContext (_window) };
+  if (gl_context == nullptr)
+    {
+      fatal_error ("Failed to create SDL_GLContext");
     }
 };
 
