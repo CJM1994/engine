@@ -1,4 +1,5 @@
 #include "../include/ProgramController.h"
+#include <GL/gl.h>
 #include <SDL2/SDL_error.h>
 #include <SDL2/SDL_events.h>
 #include <SDL2/SDL_video.h>
@@ -32,6 +33,8 @@ ProgramController::init_systems ()
     {
       fatal_error ("Failed to create SDL_GLContext");
     }
+  SDL_GL_SetAttribute (SDL_GL_DOUBLEBUFFER, true);
+  glClearColor (0, 0, 255, 255); // Opaque Blue
 };
 
 void
@@ -49,6 +52,17 @@ ProgramController::process_input ()
           break;
         }
     }
+}
+
+void
+ProgramController::draw ()
+{
+  // Clear
+  glClearDepth (1.0);
+  glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+  // Rendering
+  SDL_GL_SwapWindow (_window);
 }
 
 void
@@ -70,26 +84,13 @@ ProgramController::fatal_error (std::string error)
 void
 ProgramController::main_loop ()
 {
-  // NOTE: Placeholder graphic for window surface
-  SDL_Surface *window_surface = SDL_GetWindowSurface (_window);
-  if (!window_surface)
-    {
-      fatal_error ("Failed to create surface with SDL2");
-    }
-  SDL_Surface *image = SDL_LoadBMP ("assets/doom.bmp");
-  if (!image)
-    {
-      fatal_error ("Failed to load image with SDL2");
-    }
-
   // Keep window open until closed
   while (_state == ProgramState::RUN)
     {
       // Poll for events and update on event
       process_input ();
       // Update window
-      SDL_BlitSurface (image, NULL, window_surface, NULL);
-      SDL_UpdateWindowSurface (_window);
+      draw ();
     }
 }
 
