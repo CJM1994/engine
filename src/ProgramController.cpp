@@ -22,7 +22,7 @@ ProgramController::init_systems ()
     }
   _window = SDL_CreateWindow (_window_title, SDL_WINDOWPOS_CENTERED,
                               SDL_WINDOWPOS_CENTERED, _window_width,
-                              _window_height, 0);
+                              _window_height, SDL_WINDOW_OPENGL);
   if (_window == nullptr)
     {
       fatal_error ("Failed to create window with SDL2");
@@ -73,8 +73,7 @@ ProgramController::fatal_error (std::string error)
     {
       std::cout << "Last SDL2 error: " << SDL_GetError () << '\n';
     }
-  std::cout << "Fatal error, enter any string to close the application"
-            << '\n';
+  std::cout << "Fatal error, enter any string to close the application" << '\n';
   char input;
   std::cin >> input;
   SDL_Quit ();
