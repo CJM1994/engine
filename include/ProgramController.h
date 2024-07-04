@@ -35,7 +35,6 @@ private:
   SDL_Window *_window;
   int _window_width;
   int _window_height;
-  ProgramState _program_state;
 };
 
 #endif
