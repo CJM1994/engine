@@ -1,3 +1,4 @@
+#include "../include/ProgramController.h"
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_events.h>
 #include <SDL2/SDL_timer.h>
@@ -9,6 +10,9 @@ int
 main (int argc, char *argv[])
 {
   bool keep_window_open{ true };
+
+  ProgramController program_controller;
+  program_controller.run ();
 
   if (SDL_Init (SDL_INIT_VIDEO) < 0)
     {
