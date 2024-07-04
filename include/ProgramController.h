@@ -20,14 +20,15 @@ public:
   void run ();
 
   // Vars
-  SDL_Window *_window;
 
 private:
   // Methods
   void initSystems ();
 
   // Vars
+  ProgramState _state;
   char const *_window_title;
+  SDL_Window *_window;
   int _window_width;
   int _window_height;
   ProgramState _program_state;

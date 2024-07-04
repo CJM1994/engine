@@ -3,8 +3,8 @@
 #include <iostream>
 
 ProgramController::ProgramController ()
-    : _window (nullptr), _window_title ("DOOM"), _window_width (640),
-      _window_height (400)
+    : _state (ProgramState::RUN), _window_title ("DOOM"), _window (nullptr),
+      _window_width (640), _window_height (400)
 
 {
 }
@@ -25,6 +25,40 @@ ProgramController::initSystems ()
   if (!_window)
     {
       std::cout << "Failed to create window" << '\n';
+    }
+
+  SDL_Surface *window_surface = SDL_GetWindowSurface (_window);
+
+  if (!window_surface)
+    {
+      std::cout << "Failed to create surface" << '\n';
+    }
+
+  SDL_Surface *image = SDL_LoadBMP ("build/doom.bmp");
+
+  if (!image)
+    {
+      std::cout << "Failed to load image" << '\n';
+      std::cout << "SDL2 Error: " << SDL_GetError () << '\n';
+    }
+
+  // Keep window open until closed
+  while (_state == ProgramState::RUN)
+    {
+      // Poll for events and update on event
+      SDL_Event e;
+      while (SDL_PollEvent (&e) > 0)
+        {
+          switch (e.type)
+            {
+            case SDL_QUIT:
+              _state = ProgramState::HALT;
+              break;
+            }
+        }
+      // Update window
+      SDL_BlitSurface (image, NULL, window_surface, NULL);
+      SDL_UpdateWindowSurface (_window);
     }
 };
 
