@@ -1,4 +1,5 @@
 CXX = g++
+CXX_FLAGS = -std=c++20
 BUILD_DIR = build
 SOURCE_DIR = src
 ASSETS_DIR = assets
@@ -22,11 +23,11 @@ all: $(EXEC)
 
 # Rule to link object files into executable
 $(EXEC): $(OBJS) | $(BUILD_DIR)
-	$(CXX) $(SDL_CFLAGS) $(HEADER_CFLAGS) $(SDL_LFLAGS) $^ -o $@
+	$(CXX) ${CXX_FLAGS} $(SDL_CFLAGS) $(HEADER_CFLAGS) $(SDL_LFLAGS) $^ -o $@
 
 # Rule to compile each source file into object files
 $(BUILD_DIR)/%.o: $(SOURCE_DIR)/%.cpp | $(BUILD_DIR)
-	$(CXX) $(SDL_CFLAGS) $(HEADER_CFLAGS) -c $< -o $@
+	$(CXX) ${CXX_FLAGS} $(SDL_CFLAGS) $(HEADER_CFLAGS) -c $< -o $@
 
 # Create build directory if it doesn't exist
 $(BUILD_DIR):

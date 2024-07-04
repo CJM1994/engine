@@ -14,22 +14,8 @@ main (int argc, char *argv[])
   ProgramController program_controller;
   program_controller.run ();
 
-  if (SDL_Init (SDL_INIT_VIDEO) < 0)
-    {
-      std::cout << "Failed to initialize the SDL2 library" << '\n';
-      return EXIT_FAILURE;
-    }
-
-  SDL_Window *window = SDL_CreateWindow ("Window", SDL_WINDOWPOS_CENTERED,
-                                         SDL_WINDOWPOS_CENTERED, 640, 400, 0);
-
-  if (!window)
-    {
-      std::cout << "Failed to create window" << '\n';
-      return EXIT_FAILURE;
-    }
-
-  SDL_Surface *window_surface = SDL_GetWindowSurface (window);
+  SDL_Surface *window_surface
+      = SDL_GetWindowSurface (program_controller._window);
 
   if (!window_surface)
     {
@@ -61,7 +47,7 @@ main (int argc, char *argv[])
         }
       SDL_BlitSurface (image, NULL, window_surface, NULL);
       // Update window
-      SDL_UpdateWindowSurface (window);
+      SDL_UpdateWindowSurface (program_controller._window);
     }
 
   return EXIT_SUCCESS;
