@@ -66,8 +66,7 @@ void
 ProgramController::draw ()
 {
   // Clear
-  glClearDepth (1.0); // NOTE: Might not need to clear depth in ortho mode
-  glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+  glClear (GL_COLOR_BUFFER_BIT);
 
   // Render a textured quad
   glBegin (GL_QUADS);
@@ -78,15 +77,15 @@ ProgramController::draw ()
 
   // Bottom-Right
   glTexCoord2f (1.0f, 0.0f);
-  glVertex2i (_window_width / 2, 0);
+  glVertex2i (_window_width, 0);
 
   // Top-Right
   glTexCoord2f (1.0f, 1.0f);
-  glVertex2i (_window_width / 2, _window_height / 2);
+  glVertex2i (_window_width, _window_height);
 
   // Top-Left
   glTexCoord2f (0.0f, 1.0f);
-  glVertex2i (0, _window_height / 2);
+  glVertex2i (0, _window_height);
 
   glEnd ();
 
