@@ -8,7 +8,7 @@
 
 ProgramController::ProgramController ()
     : _state (ProgramState::RUN), _window_title ("DOOM"), _window (nullptr),
-      _window_width (640), _window_height (400)
+      _window_width (640), _window_height (480)
 {
 }
 
@@ -33,8 +33,16 @@ ProgramController::init_systems ()
     {
       fatal_error ("Failed to create SDL_GLContext");
     }
-  SDL_GL_SetAttribute (SDL_GL_DOUBLEBUFFER, true);
-  glClearColor (0, 0, 255, 255); // Opaque Blue
+
+  // Basic OpenGL configuration
+  SDL_GL_SetAttribute (SDL_GL_DOUBLEBUFFER, true); // Double Buffering Mode
+  glClearColor (0, 0, 255, 255);                   // Opaque Blue Background
+
+  // Set up orthographic view for displaying textured quad
+  glViewport (0, 0, _window_width, _window_height);
+  glMatrixMode (GL_PROJECTION);
+  glLoadIdentity ();
+  glOrtho (0.0, _window_width, 0.0, _window_height, -1.0, 1.0);
 };
 
 void
@@ -58,10 +66,31 @@ void
 ProgramController::draw ()
 {
   // Clear
-  glClearDepth (1.0);
+  glClearDepth (1.0); // NOTE: Might not need to clear depth in ortho mode
   glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-  // Rendering
+  // Render a textured quad
+  glBegin (GL_QUADS);
+
+  // Bottom-Left
+  glTexCoord2f (0.0f, 0.0f);
+  glVertex2i (0, 0);
+
+  // Bottom-Right
+  glTexCoord2f (1.0f, 0.0f);
+  glVertex2i (_window_width / 2, 0);
+
+  // Top-Right
+  glTexCoord2f (1.0f, 1.0f);
+  glVertex2i (_window_width / 2, _window_height / 2);
+
+  // Top-Left
+  glTexCoord2f (0.0f, 1.0f);
+  glVertex2i (0, _window_height / 2);
+
+  glEnd ();
+
+  // Swap buffers
   SDL_GL_SwapWindow (_window);
 }
 
@@ -73,7 +102,8 @@ ProgramController::fatal_error (std::string error)
     {
       std::cout << "Last SDL2 error: " << SDL_GetError () << '\n';
     }
-  std::cout << "Fatal error, enter any string to close the application" << '\n';
+  std::cout << "Fatal error, enter any string to close the application"
+            << '\n';
   char input;
   std::cin >> input;
   SDL_Quit ();
