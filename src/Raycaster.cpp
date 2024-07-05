@@ -1,3 +1,3 @@
 #include "../include/Raycaster.h"
 
-Raycaster::Raycaster () { return; }
+Raycaster::Raycaster () {}
