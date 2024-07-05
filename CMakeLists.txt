@@ -8,8 +8,9 @@ find_package(OpenGL REQUIRED)
 include_directories(SDL2_INCLUDE_DIRS OPENGL_INCLUDE_DIRS ${PROJECT_SOURCE_DIR/include})
 
 set(SOURCES 
-  src/main.cpp
   src/ProgramController.cpp
+  src/Raycaster.cpp
+  src/main.cpp
 )
 
 add_executable(Engine ${SOURCES})
