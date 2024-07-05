@@ -9,6 +9,8 @@ public:
   ~Raycaster ();
 
 private:
+  void calculate_pixel_buffer ();
+
   // Viewer Position
   double _positionX;
   double _positionY;
@@ -21,6 +23,10 @@ private:
   // FPS Counter
   double _frame_time;
   double _last_frame_time;
+  // Width of Screen in Pixels
+  int _pixel_width;
+  // TODO: Pass pixel width in a better way, improve interface with
+  // ProgramController class
 
   int _test_map[24][24]{
     {
