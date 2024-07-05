@@ -3,20 +3,24 @@
 
 class Raycaster
 {
+public:
   // Constructor/Destructor
-  Raycaster ();
+  Raycaster (int pixel_width);
   ~Raycaster ();
 
 private:
   // Viewer Position
   double _positionX;
   double _positionY;
-  // View Position
+  // View Position Vector
   double _directionX;
   double _directionY;
-  // Positive Camera Plane Position
+  // Positive Camera Plane Vector
   double _planeX;
   double _planeY;
+  // FPS Counter
+  double _frame_time;
+  double _last_frame_time;
 
   int _test_map[24][24]{
     {
@@ -83,10 +87,10 @@ private:
         1, 0, 4, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
     },
     {
-        1, 0, 4, 4, 4, 0, 0, 5, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+        1, 0, 4, 0, 0, 0, 0, 5, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
     },
     {
-        1, 0, 0, 0, 4, 4, 4, 4, 4, 4, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+        1, 0, 4, 4, 4, 4, 4, 4, 4, 4, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
     },
     {
         1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,

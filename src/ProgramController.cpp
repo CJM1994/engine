@@ -1,4 +1,5 @@
 #include "../include/ProgramController.h"
+#include "../include/Raycaster.h"
 #include <GL/gl.h>
 #include <SDL2/SDL_error.h>
 #include <SDL2/SDL_events.h>
@@ -7,8 +8,9 @@
 #include <iostream>
 
 ProgramController::ProgramController ()
-    : _state (ProgramState::RUN), _window_title ("DOOM"), _window (nullptr),
-      _window_width (640), _window_height (480)
+    : _state (ProgramState::RUN), _window_title ("PROGRAM WINDOW"),
+      _window (nullptr), _window_width (640), _window_height (480),
+      _raycaster (_window_width)
 {
 }
 

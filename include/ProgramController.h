@@ -1,6 +1,7 @@
 #ifndef PROGRAM_CONTROLLER
 #define PROGRAM_CONTROLLER
 
+#include "Raycaster.h"
 #include <SDL2/SDL.h>
 #include <string>
 
@@ -35,6 +36,7 @@ private:
   SDL_Window *_window;
   int _window_width;
   int _window_height;
+  Raycaster _raycaster;
 };
 
 #endif
