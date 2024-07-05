@@ -18,8 +18,8 @@ Raycaster::calculate_pixel_buffer ()
     {
       // Calculate ray direction
       double camera_planeX = ((double (current_pixel) * 2) / _pixel_width) - 1;
-      double ray_directionX = (_directionX + _planeX) * camera_planeX;
-      double ray_directionY = (_directionY + _planeY) * camera_planeX;
+      double ray_directionX = _directionX + (_planeX * camera_planeX);
+      double ray_directionY = _directionY + (_planeY * camera_planeX);
       std::cout << "CameraPlaneX: " << camera_planeX << '\n';
     }
 };
