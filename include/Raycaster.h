@@ -25,8 +25,6 @@ private:
   double _last_frame_time;
   // Width of Screen in Pixels
   int _pixel_width;
-  // TODO: Pass pixel width in a better way, improve interface with
-  // ProgramController class
 
   int _test_map[24][24]{
     {

@@ -2,7 +2,7 @@
 #include <iostream>
 
 Raycaster::Raycaster (int pixel_width)
-    : _positionX (7.0), _positionY (21.0), _directionX (-1.0),
+    : _positionX (13.0), _positionY (8.0), _directionX (-1.0),
       _directionY (0.0), _planeX (0.0), _planeY (0.7), _frame_time (0.0),
       _last_frame_time (0.0), _pixel_width (pixel_width)
 {
@@ -91,7 +91,13 @@ Raycaster::calculate_pixel_buffer ()
               side = WallSide::HORZ;
             }
           // Check if a wall has been hit
-          // TODO: Need to get world map from ProgramController here
+          if (_test_map[mapX][mapY] > 0)
+            {
+              hit = true;
+
+              std::cout << "Wall Hit at " << "x: " << mapX << "y: " << mapY
+                        << '\n';
+            }
         }
     }
 };
