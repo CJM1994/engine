@@ -13,8 +13,8 @@ Raycaster::~Raycaster (){};
 
 enum class WallSide
 {
-  HORZ,
-  VERT,
+  HORZ, // x side
+  VERT, // y side
 };
 
 void
@@ -74,7 +74,24 @@ Raycaster::calculate_pixel_buffer ()
           side_distY = (mapY + 1.0 - _positionY) * delta_distY;
         }
 
-      std::cout << "side_distX: " << side_distX << '\n';
-      std::cout << "side_distY: " << side_distY << '\n';
+      // Perform DDA
+      while (hit == false)
+        {
+          // If side_distX < side_distY walk along the x axis with ray
+          if (side_distX < side_distY)
+            {
+              mapX += stepX;             // move one cell on x axis
+              side_distX += delta_distX; // get distance to next x side
+              side = WallSide::VERT;
+            }
+          else
+            {
+              mapY += stepY;
+              side_distY += delta_distY;
+              side = WallSide::HORZ;
+            }
+          // Check if a wall has been hit
+          // TODO: Need to get world map from ProgramController here
+        }
     }
 };
