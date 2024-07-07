@@ -1,6 +1,7 @@
 #include "../include/ProgramController.h"
 #include "../include/Raycaster.h"
 #include <GL/gl.h>
+#include <GL/glew.h>
 #include <SDL2/SDL_error.h>
 #include <SDL2/SDL_events.h>
 #include <SDL2/SDL_video.h>
@@ -45,6 +46,8 @@ ProgramController::init_systems ()
   glMatrixMode (GL_PROJECTION);
   glLoadIdentity ();
   glOrtho (0.0, _window_width, 0.0, _window_height, -1.0, 1.0);
+
+  // Create framebuffer
 };
 
 void
