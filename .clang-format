@@ -5,3 +5,4 @@ BreakBeforeBraces: GNU
 AllowShortIfStatementsOnASingleLine: false
 IndentCaseLabels: false
 ColumnLimit: 80
+SortIncludes: false

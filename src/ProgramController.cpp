@@ -1,7 +1,8 @@
 #include "../include/ProgramController.h"
 #include "../include/Raycaster.h"
-#include <GL/gl.h>
 #include <GL/glew.h>
+#include <GL/gl.h>
+#include <GL/glext.h>
 #include <SDL2/SDL_error.h>
 #include <SDL2/SDL_events.h>
 #include <SDL2/SDL_video.h>
@@ -37,6 +38,13 @@ ProgramController::init_systems ()
       fatal_error ("Failed to create SDL_GLContext");
     }
 
+  // GLEW
+  glewExperimental = GL_TRUE;
+  if (glewInit () != GLEW_OK)
+    {
+      fatal_error ("Failed to initialize GLEW");
+    }
+
   // Basic OpenGL configuration
   SDL_GL_SetAttribute (SDL_GL_DOUBLEBUFFER, true); // Double Buffering Mode
   glClearColor (0, 0, 255, 255);                   // Opaque Blue Background
@@ -48,6 +56,38 @@ ProgramController::init_systems ()
   glOrtho (0.0, _window_width, 0.0, _window_height, -1.0, 1.0);
 
   // Create framebuffer
+  GLuint frame_buffer;
+  glGenFramebuffers (1, &frame_buffer); // Gen one framebuffer obj name
+  std::cout << glGetError () << '\n';
+  glBindFramebuffer (GL_FRAMEBUFFER,
+                     frame_buffer); // Target FBO for rendering operations
+  std::cout << glGetError () << '\n';
+
+  // Create texture
+  GLuint texture;
+  glGenTextures (1, &texture); // Gen one texture obj name
+  std::cout << glGetError () << '\n';
+  glBindTexture (GL_TEXTURE_2D, texture);
+  std::cout << glGetError () << '\n';
+
+  // Allocate storage for texture
+  glTexImage2D (texture, 0, GL_RGBA, _window_width, _window_height, 0, GL_RGBA,
+                GL_UNSIGNED_BYTE, nullptr);
+  std::cout << glGetError () << '\n';
+
+  // Attach texture to framebuffer
+  glFramebufferTexture2D (GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D,
+                          texture, 0);
+  std::cout << glGetError () << '\n';
+
+  if (glCheckFramebufferStatus (GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+    {
+      std::cout << glGetError () << '\n';
+      fatal_error ("Failed to create OpenGL framebuffer");
+    }
+
+  // Unbind framebuffer for now
+  glBindFramebuffer (GL_FRAMEBUFFER, 0);
 };
 
 void
@@ -106,8 +146,7 @@ ProgramController::fatal_error (std::string error)
     {
       std::cout << "Last SDL2 error: " << SDL_GetError () << '\n';
     }
-  std::cout << "Fatal error, enter any string to close the application"
-            << '\n';
+  std::cout << "Fatal error, enter any string to close the application" << '\n';
   char input;
   std::cin >> input;
   SDL_Quit ();
