@@ -41,11 +41,6 @@ ProgramController::init_systems ()
     {
       fatal_error ("Failed to create renderer with SDL2");
     }
-
-  SDL_SetRenderDrawColor (_renderer, 0, 0, 0,
-                          255);  // Set background color (black)
-  SDL_RenderClear (_renderer);   // Clear the renderer
-  SDL_RenderPresent (_renderer); // Update the screen
 };
 
 void
@@ -83,8 +78,7 @@ ProgramController::fatal_error (std::string error)
     {
       std::cout << "Last SDL2 error: " << SDL_GetError () << '\n';
     }
-  std::cout << "Fatal error, enter any string to close the application"
-            << '\n';
+  std::cout << "Fatal error, enter any string to close the application" << '\n';
   char input;
   std::cin >> input;
   SDL_Quit ();

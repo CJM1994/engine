@@ -5,12 +5,11 @@
 #include <cstdlib>
 
 Raycaster::Raycaster (int pixel_width, int pixel_height)
-    : _positionX (3.0), _positionY (2.0), _directionX (-1.0),
-      _directionY (0.0), _planeX (0.0), _planeY (0.7), _frame_time (0.0),
-      _last_frame_time (0.0), _pixel_width (pixel_width),
-      _pixel_height (pixel_height) {};
+    : _positionX (3.0), _positionY (2.0), _directionX (-1.0), _directionY (0.0),
+      _planeX (0.0), _planeY (0.7), _frame_time (0.0), _last_frame_time (0.0),
+      _pixel_width (pixel_width), _pixel_height (pixel_height){};
 
-Raycaster::~Raycaster () {};
+Raycaster::~Raycaster (){};
 
 enum class WallSide
 {
@@ -26,9 +25,10 @@ Raycaster::render_frame (SDL_Renderer *renderer)
       ProgramController::fatal_error (
           "Renderer is nullptr in Raycaster instance");
     }
-  SDL_SetRenderDrawColor (renderer, 0, 0, 0,
-                          255); // Set background color (black)
-  SDL_RenderClear (renderer);   // Clear the renderer
+
+  // Reset buffer at start of each frame render
+  SDL_SetRenderDrawColor (renderer, 0, 0, 0, 255);
+  SDL_RenderClear (renderer);
 
   // Scan from left side of view to right side, by columns 1 pixel wide
   for (int current_pixel{ 0 }; current_pixel < _pixel_width; current_pixel++)
@@ -37,7 +37,6 @@ Raycaster::render_frame (SDL_Renderer *renderer)
       double camera_planeX = ((double (current_pixel) * 2) / _pixel_width) - 1;
       double ray_directionX = _directionX + (_planeX * camera_planeX);
       double ray_directionY = _directionY + (_planeY * camera_planeX);
-      // std::cout << "camera_planeX: " << camera_planeX << '\n';
 
       // NOTE:
       // Use DDA Algorithm (Digital Differential Analyzer) to determine which
@@ -151,10 +150,10 @@ Raycaster::render_frame (SDL_Renderer *renderer)
           colour = { 255, 255, 255, 255 }; // White
         }
 
-      SDL_SetRenderDrawColor (renderer, colour.r, colour.g, colour.b,
-                              colour.a);
+      // Draw a line with the wall color
+      SDL_SetRenderDrawColor (renderer, colour.r, colour.g, colour.b, colour.a);
       SDL_RenderDrawLine (renderer, current_pixel, draw_start, current_pixel,
                           draw_end);
     }
-  SDL_RenderPresent (renderer); // Update the screen
+  SDL_RenderPresent (renderer); // Update the screen after all pixels drawn
 };
