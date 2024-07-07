@@ -1,10 +1,11 @@
 #include "../include/Raycaster.h"
 #include <iostream>
 
-Raycaster::Raycaster (int pixel_width)
+Raycaster::Raycaster (int pixel_width, int pixel_height)
     : _positionX (13.0), _positionY (8.0), _directionX (-1.0),
       _directionY (0.0), _planeX (0.0), _planeY (0.7), _frame_time (0.0),
-      _last_frame_time (0.0), _pixel_width (pixel_width)
+      _last_frame_time (0.0), _pixel_width (pixel_width),
+      _pixel_height (pixel_height)
 {
   this->calculate_pixel_buffer ();
 };
@@ -44,6 +45,7 @@ Raycaster::calculate_pixel_buffer ()
       // Length of ray from on x/y side to next x/y side
       double delta_distX{ std::abs (1 / ray_directionX) };
       double delta_distY{ std::abs (1 / ray_directionY) };
+      double perp_wall_dist; // Shortest dist from camera plane to hit point
 
       // Which direction to move on x or y axis (+1 or -1)
       int stepX;
@@ -94,10 +96,32 @@ Raycaster::calculate_pixel_buffer ()
           if (_test_map[mapX][mapY] > 0)
             {
               hit = true;
-
-              std::cout << "Wall Hit at " << "x: " << mapX << "y: " << mapY
-                        << '\n';
             }
         }
+
+      // Get distance from camera plane to ray hit
+      if (side == WallSide::HORZ)
+        {
+          perp_wall_dist = side_distX - delta_distX;
+        }
+      else
+        {
+          perp_wall_dist = side_distY - delta_distY;
+        }
+
+      // Calculate the length of line to draw
+      // Walls should be full screen height at 1 unit distance
+      int line_height = _pixel_height / perp_wall_dist;
+
+      // Calculate lowest and highest pixel to draw
+      // Center of wall will always be in center of screen
+      int draw_start = (_pixel_height) / 2 - (line_height) / 2;
+      int draw_end = _pixel_height - draw_start;
+      if (draw_start < 0)
+        draw_start = 0;
+      if (draw_end < _pixel_height)
+        draw_end = _pixel_height--;
+
+      // Choose colour based on map data
     }
 };

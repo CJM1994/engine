@@ -10,7 +10,7 @@
 ProgramController::ProgramController ()
     : _state (ProgramState::RUN), _window_title ("PROGRAM WINDOW"),
       _window (nullptr), _window_width (640), _window_height (480),
-      _raycaster (_window_width)
+      _raycaster (_window_width, _window_height)
 {
 }
 

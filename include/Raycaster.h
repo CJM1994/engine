@@ -5,7 +5,7 @@ class Raycaster
 {
 public:
   // Constructor/Destructor
-  Raycaster (int pixel_width);
+  Raycaster (int, int);
   ~Raycaster ();
 
 private:
@@ -23,8 +23,9 @@ private:
   // FPS Counter
   double _frame_time;
   double _last_frame_time;
-  // Width of Screen in Pixels
+  // Size of Screen in Pixels
   int _pixel_width;
+  int _pixel_height;
 
   int _test_map[24][24]{
     {
