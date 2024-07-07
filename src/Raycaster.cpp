@@ -1,26 +1,35 @@
+#include "../include/ProgramController.h"
 #include "../include/Raycaster.h"
-#include <iostream>
+#include <SDL2/SDL_pixels.h>
+#include <SDL2/SDL_render.h>
+#include <cstdlib>
 
 Raycaster::Raycaster (int pixel_width, int pixel_height)
-    : _positionX (13.0), _positionY (8.0), _directionX (-1.0),
+    : _positionX (3.0), _positionY (2.0), _directionX (-1.0),
       _directionY (0.0), _planeX (0.0), _planeY (0.7), _frame_time (0.0),
       _last_frame_time (0.0), _pixel_width (pixel_width),
-      _pixel_height (pixel_height)
-{
-  this->calculate_pixel_buffer ();
-};
+      _pixel_height (pixel_height) {};
 
-Raycaster::~Raycaster (){};
+Raycaster::~Raycaster () {};
 
 enum class WallSide
 {
-  HORZ, // x side
-  VERT, // y side
+  VERT,
+  HORZ,
 };
 
 void
-Raycaster::calculate_pixel_buffer ()
+Raycaster::render_frame (SDL_Renderer *renderer)
 {
+  if (renderer == nullptr)
+    {
+      ProgramController::fatal_error (
+          "Renderer is nullptr in Raycaster instance");
+    }
+  SDL_SetRenderDrawColor (renderer, 0, 0, 0,
+                          255); // Set background color (black)
+  SDL_RenderClear (renderer);   // Clear the renderer
+
   // Scan from left side of view to right side, by columns 1 pixel wide
   for (int current_pixel{ 0 }; current_pixel < _pixel_width; current_pixel++)
     {
@@ -43,8 +52,8 @@ Raycaster::calculate_pixel_buffer ()
       double side_distY;
 
       // Length of ray from on x/y side to next x/y side
-      double delta_distX{ std::abs (1 / ray_directionX) };
-      double delta_distY{ std::abs (1 / ray_directionY) };
+      double delta_distX{ std::abs (1.0 / ray_directionX) };
+      double delta_distY{ std::abs (1.0 / ray_directionY) };
       double perp_wall_dist; // Shortest dist from camera plane to hit point
 
       // Which direction to move on x or y axis (+1 or -1)
@@ -100,7 +109,7 @@ Raycaster::calculate_pixel_buffer ()
         }
 
       // Get distance from camera plane to ray hit
-      if (side == WallSide::HORZ)
+      if (side == WallSide::VERT)
         {
           perp_wall_dist = side_distX - delta_distX;
         }
@@ -115,13 +124,37 @@ Raycaster::calculate_pixel_buffer ()
 
       // Calculate lowest and highest pixel to draw
       // Center of wall will always be in center of screen
-      int draw_start = (_pixel_height) / 2 - (line_height) / 2;
+      int draw_start = _pixel_height / 2 - line_height / 2;
       int draw_end = _pixel_height - draw_start;
       if (draw_start < 0)
         draw_start = 0;
-      if (draw_end < _pixel_height)
+      if (draw_end >= _pixel_height)
         draw_end = _pixel_height--;
 
       // Choose colour based on map data
+      SDL_Colour colour;
+      switch (_test_map[mapX][mapY])
+        {
+        case 1:
+          colour = { 255, 0, 0, 255 }; // Red
+          break;
+        case 2:
+          colour = { 0, 255, 0, 255 }; // Green
+          break;
+        case 3:
+          colour = { 0, 0, 255, 255 }; // Blue
+          break;
+        case 4:
+          colour = { 255, 0, 255, 255 }; // Purple
+          break;
+        default:
+          colour = { 255, 255, 255, 255 }; // White
+        }
+
+      SDL_SetRenderDrawColor (renderer, colour.r, colour.g, colour.b,
+                              colour.a);
+      SDL_RenderDrawLine (renderer, current_pixel, draw_start, current_pixel,
+                          draw_end);
     }
+  SDL_RenderPresent (renderer); // Update the screen
 };

@@ -1,16 +1,16 @@
 #ifndef RAYCASTER
 #define RAYCASTER
 
+#include <SDL2/SDL_render.h>
 class Raycaster
 {
 public:
   // Constructor/Destructor
   Raycaster (int, int);
   ~Raycaster ();
+  void render_frame (SDL_Renderer *);
 
 private:
-  void calculate_pixel_buffer ();
-
   // Viewer Position
   double _positionX;
   double _positionY;

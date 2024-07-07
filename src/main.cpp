@@ -9,7 +9,5 @@ int
 main (int argc, char *argv[])
 {
   ProgramController program_controller;
-  program_controller.run ();
-
   return EXIT_SUCCESS;
 }
