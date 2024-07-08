@@ -150,10 +150,16 @@ Raycaster::render_frame (SDL_Renderer *renderer)
           colour = { 255, 255, 255, 255 }; // White
         }
 
+      // Make one side of walls darker
+      if (side == WallSide::VERT)
+        {
+          colour = { Uint8 (colour.r / 2), Uint8 (colour.g / 2),
+                     Uint8 (colour.b / 2), 255 };
+        }
+
       // Draw a line with the wall color
       SDL_SetRenderDrawColor (renderer, colour.r, colour.g, colour.b, colour.a);
       SDL_RenderDrawLine (renderer, current_pixel, draw_start, current_pixel,
                           draw_end);
     }
-  SDL_RenderPresent (renderer); // Update the screen after all pixels drawn
 };

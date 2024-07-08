@@ -4,6 +4,7 @@
 #include <SDL2/SDL_events.h>
 #include <SDL2/SDL_pixels.h>
 #include <SDL2/SDL_render.h>
+#include <SDL2/SDL_timer.h>
 #include <SDL2/SDL_video.h>
 #include <cstdlib>
 #include <iostream>
@@ -63,10 +64,6 @@ ProgramController::process_input ()
 void
 ProgramController::draw ()
 {
-  if (_renderer == nullptr)
-    {
-      fatal_error ("Renderer is nullptr in draw method");
-    }
   _raycaster.render_frame (_renderer);
 }
 
@@ -88,12 +85,29 @@ ProgramController::fatal_error (std::string error)
 void
 ProgramController::main_loop ()
 {
+  // Variables for FPS Counter
+  int frame_count;
+  Uint64 start_time = SDL_GetTicks64 ();
+  Uint64 current_time;
+  Uint64 delta_time;
+
   // Keep window open until closed
   while (_state == ProgramState::RUN)
     {
+      // FPS Counter
+      frame_count++;
+      Uint64 current_time = SDL_GetTicks64 ();
+      delta_time = current_time - start_time;
+      if (delta_time > 1000)
+        {
+          std::cout << "FPS: " << frame_count << '\n';
+          frame_count = 0;
+          start_time = current_time;
+        }
+
       // Poll for events and update on event
       process_input ();
-      // Update window
       draw ();
+      SDL_RenderPresent (_renderer); // Update the screen after all pixels drawn
     }
 }
